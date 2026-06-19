@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="GRAVITY - Dashboard IoT Futurista de Observabilidad y Monitoreo en Tiempo Real para el Proyecto Botón.">
+  <title>bombillos LED</title>
+
+  <!-- Google Fonts: Syne + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Syne:wght@400..800&display=swap" rel="stylesheet">
+
+  <!-- Tabler Icons Webfont via jsDelivr -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+
+  <!-- Chart.js via CDNJS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+  <!-- MQTT.js — cliente WebSocket MQTT para browser -->
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Background Dot Grid -->
+  <div class="dot-grid-bg"></div>
+
+  <!-- Main Dashboard Container -->
+  <div class="dashboard-container">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <i class="ti ti-gravity logo-icon"></i>
+        <span>RGB</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-group-label">Observabilidad</div>
+        <ul>
+          <li class="nav-item active" data-target="sec-inicio">
+            <i class="ti ti-smart-home nav-icon"></i>
+            <span>Inicio</span>
+          </li>
+          <li class="nav-item" data-target="sec-graficos">
+            <i class="ti ti-chart-bar-popular nav-icon"></i>
+            <span>Gráficos</span>
+          </li>
+          <li class="nav-item" data-target="sec-sistema">
+            <i class="ti ti-server-cog nav-icon"></i>
+            <span>Sistema</span>
+          </li>
+        </ul>
+
+        <div class="nav-group-label">Dispositivos</div>
+        <ul>
+          <li class="nav-item" data-target="sec-conexiones">
+            <i class="ti ti-router nav-icon"></i>
+            <span>Conexiones</span>
+          </li>
+        </ul>
+
+        <div class="nav-group-label">Plataforma</div>
+        <ul>
+          <li class="nav-item" data-target="sec-quienes-somos">
+            <i class="ti ti-users-group nav-icon"></i>
+            <span>Quiénes Somos</span>
+          </li>
+          <li class="nav-item" data-target="sec-soporte">
+            <i class="ti ti-help-hexagon nav-icon"></i>
+            <span>Soporte</span>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-indicator-box">
+          <span class="pulse-dot green"></span>
+          <span class="status-text font-mono">BROKER ONLINE</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Content Workspace -->
+    <div class="main-workspace">
+
+      <!-- Topbar Header -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1 id="topbar-title" class="font-syne">INICIO</h1>
+        </div>
+        <div class="topbar-right">
+          <div class="ticker-compact">
+            <span class="badge badge-accent font-mono">Horario COL</span>
+          </div>
+          <div class="clock-display font-mono" id="topbar-clock">
+            00:00:00.0
+          </div>
+        </div>
+      </header>
+
+      <!-- Scrollable Main Viewport -->
+      <main class="content-viewport" id="viewport">
+
+        <!-- ======================================================== -->
+        <!-- SECCIÓN 1 — INICIO -->
+        <!-- ======================================================== -->
+        <section id="sec-inicio" class="section-pane active fade-in">
+          
+          <!-- [A] HERO CAROUSEL -->
+          <div class="carousel-container" id="hero-carousel">
+            <div class="carousel-track">
+              <!-- Slide 1: Hardware -->
+              <div class="carousel-slide active" style="background-image: linear-gradient(to bottom, rgba(8, 12, 18, 0.4), rgba(8, 12, 18, 0.9)), url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80');">
+                <span class="slide-badge font-mono badge-primary">HARDWARE</span>
+                <h2 class="slide-title font-syne">Infraestructura de Sensores</h2>
+                <p class="slide-desc">Despliegue distribuido de nodos IoT con sensores de alta precisión para variables ambientales y operativas del Proyecto Botón.</p>
+              </div>
+              <!-- Slide 2: Infrastructure -->
+              <div class="carousel-slide" style="background-image: linear-gradient(to bottom, rgba(8, 12, 18, 0.4), rgba(8, 12, 18, 0.9)), url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80');">
+                <span class="slide-badge font-mono badge-secondary">INFRAESTRUCTURA</span>
+                <h2 class="slide-title font-syne">Centro de Procesamiento</h2>
+                <p class="slide-desc">Núcleo centralizado de orquestación local y nube. Servidores con soporte de balanceo dinámico y resiliencia de datos del 99.9%.</p>
+              </div>
+              <!-- Slide 3: Analytics -->
+              <div class="carousel-slide" style="background-image: linear-gradient(to bottom, rgba(8, 12, 18, 0.4), rgba(8, 12, 18, 0.9)), url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80');">
+                <span class="slide-badge font-mono badge-accent">ANALÍTICA</span>
+                <h2 class="slide-title font-syne">Monitoreo en Tiempo Real</h2>
+                <p class="slide-desc">Algoritmos de streaming de telemetría de baja latencia con procesamiento en tiempo de ejecución para alertas inmediatas.</p>
+              </div>
+              <!-- Slide 4: Connectivity -->
+              <div class="carousel-slide" style="background-image: linear-gradient(to bottom, rgba(8, 12, 18, 0.4), rgba(8, 12, 18, 0.9)), url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80');">
+                <span class="slide-badge font-mono badge-warning">CONECTIVIDAD</span>
+                <h2 class="slide-title font-syne">Proyecto Botón</h2>
+                <p class="slide-desc">Red mallada local a través de protocolos ligeros MQTT y CoAP, garantizando transmisión inalámbrica redundante en zonas industriales.</p>
+              </div>
+            </div>
+
+            <!-- Carousel Overlays & Controls -->
+            <div class="carousel-counter font-mono" id="carousel-counter">1 / 4</div>
+            <button class="carousel-btn prev-btn" id="carousel-prev-btn"><i class="ti ti-chevron-left"></i></button>
+            <button class="carousel-btn next-btn" id="carousel-next-btn"><i class="ti ti-chevron-right"></i></button>
+            <div class="carousel-dots" id="carousel-dots-container"></div>
+          </div>
+
+          <!-- [B] MÉTRICAS TIEMPO REAL -->
+          <div class="section-title-row">
+            <h3 class="subsection-title font-syne"><i class="ti ti-activity-heartbeat"></i> Estado de la Telemetría</h3>
+            <span class="live-pulse font-mono"><span class="pulse-dot green animate-pulse"></span> LIVE REFRESH</span>
+          </div>
+
+          <div class="metrics-grid">
+            <!-- Metric 1: Active Devices -->
+            <div class="metric-card card-accent">
+              <div class="card-bar accent"></div>
+              <div class="metric-header">
+                <span class="metric-label font-mono">Dispositivos Activos</span>
+                <i class="ti ti-cpu metric-icon icon-accent"></i>
+              </div>
+              <div class="metric-value font-syne" id="m-devices">24</div>
+              <div class="metric-subtext font-mono text-green"><i class="ti ti-circle-check"></i> 100% de la red operacional</div>
+            </div>
+
+            <!-- Metric 2: MQTT Messages/h -->
+            <div class="metric-card card-cyan">
+              <div class="card-bar cyan"></div>
+              <div class="metric-header">
+                <span class="metric-label font-mono">Mensajes MQTT / H</span>
+                <i class="ti ti-message-share metric-icon icon-cyan"></i>
+              </div>
+              <div class="metric-value font-syne" id="m-mqtt">18,430</div>
+              <div class="metric-subtext font-mono text-cyan"><i class="ti ti-trending-up"></i> +4.7% vs hora previa</div>
+            </div>
+
+            <!-- Metric 3: HTTP Requests -->
+            <div class="metric-card card-purple">
+              <div class="card-bar purple"></div>
+              <div class="metric-header">
+                <span class="metric-label font-mono">Solicitudes HTTP</span>
+                <i class="ti ti-server-cog metric-icon icon-purple"></i>
+              </div>
+              <div class="metric-value font-syne" id="m-http">3,124</div>
+              <div class="metric-subtext font-mono text-purple"><i class="ti ti-bolt"></i> Latencia media 14ms</div>
+            </div>
+
+            <!-- Metric 4: Active Alerts -->
+            <div class="metric-card card-pink">
+              <div class="card-bar pink"></div>
+              <div class="metric-header">
+                <span class="metric-label font-mono">Alertas Activas</span>
+                <i class="ti ti-alert-triangle metric-icon icon-pink"></i>
+              </div>
+              <div class="metric-value font-syne" id="m-alerts">0</div>
+              <div class="metric-subtext font-mono text-pink"><i class="ti ti-shield-check"></i> Sin anomalías críticas</div>
+            </div>
+
+            <!-- Metric 5: CPU% -->
+            <div class="metric-card card-warning">
+              <div class="card-bar warning"></div>
+              <div class="metric-header">
+                <span class="metric-label font-mono">Carga de CPU</span>
+                <i class="ti ti-device-heart-monitor metric-icon icon-warning"></i>
+              </div>
+              <div class="metric-value font-syne" id="m-cpu">42%</div>
+              <div class="metric-subtext font-mono text-warning"><i class="ti ti-chart-line"></i> Frecuencia a 3.8 GHz</div>
+            </div>
+
+            <!-- Metric 6: RAM% -->
+            <div class="metric-card card-purple">
+              <div class="card-bar purple"></div>
+              <div class="metric-header">
+                <span class="metric-label font-mono">Consumo RAM</span>
+                <i class="ti ti-database metric-icon icon-purple"></i>
+              </div>
+              <div class="metric-value font-syne" id="m-ram">68%</div>
+              <div class="metric-subtext font-mono text-purple"><i class="ti ti-chart-arrows-vertical"></i> 10.8 GB de 16 GB</div>
+            </div>
+          </div>
+
+          <!-- [C] TICKER BANNER -->
+          <div class="ticker-banner">
+            <div class="ticker-badge">
+              <span class="pulse-dot green animate-pulse"></span>
+              <span class="font-mono">LIVE</span>
+            </div>
+            <div class="ticker-divider">
+              <i class="ti ti-satellite-connected icon-spin"></i>
+            </div>
+            <div class="ticker-track-wrapper">
+              <div class="ticker-track font-syne" id="ticker-track">
+                <!-- Se duplicará por DOM para bucle infinito perfecto -->
+                <span>PROYECTO BOTÓN • GRAVITY PLATFORM // RED SENSORIAL OPERACIONAL • LATENCIA CRÍTICA: 12MS • SISTEMAS OPTIMIZADOS • </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- [D] CONTROL LED RGB -->
+          <div class="rgb-section-wrapper">
+            <h4 class="block-title font-syne"><i class="ti ti-bulb"></i> Control LED RGB &mdash; NanoESP32</h4>
+            <p class="block-desc font-mono">Activa o desactiva cada canal de color del LED RGB conectado al microcontrolador.</p>
+
+            <div class="rgb-cards-grid">
+
+              <!-- LED ROJO -->
+              <div class="rgb-led-card" id="card-led-red">
+                <div class="rgb-led-orb orb-red" id="orb-red"></div>
+                <div class="rgb-led-info">
+                  <span class="rgb-led-label font-syne">LED RED</span>
+                  <span class="rgb-led-topic font-mono">nanoesp32/led/red</span>
+                </div>
+                <div class="rgb-led-controls">
+                  <span class="status-badge font-mono state-off" id="badge-red">OFF</span>
+                  <button class="master-toggle-btn" id="btn-red" onclick="toggleRGB('red')">
+                    <span class="master-toggle-circle"></span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- LED VERDE -->
+              <div class="rgb-led-card" id="card-led-green">
+                <div class="rgb-led-orb orb-green" id="orb-green"></div>
+                <div class="rgb-led-info">
+                  <span class="rgb-led-label font-syne">LED GREEN</span>
+                  <span class="rgb-led-topic font-mono">nanoesp32/led/green</span>
+                </div>
+                <div class="rgb-led-controls">
+                  <span class="status-badge font-mono state-off" id="badge-green">OFF</span>
+                  <button class="master-toggle-btn" id="btn-green" onclick="toggleRGB('green')">
+                    <span class="master-toggle-circle"></span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- LED AZUL -->
+              <div class="rgb-led-card" id="card-led-blue">
+                <div class="rgb-led-orb orb-blue" id="orb-blue"></div>
+                <div class="rgb-led-info">
+                  <span class="rgb-led-label font-syne">LED BLUE</span>
+                  <span class="rgb-led-topic font-mono">nanoesp32/led/blue</span>
+                </div>
+                <div class="rgb-led-controls">
+                  <span class="status-badge font-mono state-off" id="badge-blue">OFF</span>
+                  <button class="master-toggle-btn" id="btn-blue" onclick="toggleRGB('blue')">
+                    <span class="master-toggle-circle"></span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- TABLA EVENTOS RECIENTES -->
+          <div class="table-container-section">
+            <div class="table-header-row">
+              <h4 class="block-title font-syne"><i class="ti ti-list-details"></i> Registro de Eventos en Tiempo Real</h4>
+              <span class="badge font-mono badge-primary">Últimas 5 señales</span>
+            </div>
+            
+            <div class="responsive-table-wrapper">
+              <table class="dashboard-table font-mono">
+                <thead>
+                  <tr>
+                    <th>Hora</th>
+                    <th>Dispositivo</th>
+                    <th>Topic MQTT</th>
+                    <th>Evento</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody id="events-table-body">
+                  <tr>
+                    <td>13:02:45</td>
+                    <td><span class="device-cell"><i class="ti ti-cpu"></i> SENSOR_NET_02</span></td>
+                    <td>sensors/cmd</td>
+                    <td>Lectura de temperatura enviada: 24.5 °C</td>
+                    <td><span class="badge badge-accent">SUCCESS</span></td>
+                  </tr>
+                  <tr>
+                    <td>13:02:18</td>
+                    <td><span class="device-cell"><i class="ti ti-router"></i> MAIN_GATEWAY</span></td>
+                    <td>gateway/cmd</td>
+                    <td>Ping de enlace recibido</td>
+                    <td><span class="badge badge-cyan">INFO</span></td>
+                  </tr>
+                  <tr>
+                    <td>13:01:50</td>
+                    <td><span class="device-cell"><i class="ti ti-toggle-right"></i> RELAY_ACTUATOR_1</span></td>
+                    <td>actuators/cmd</td>
+                    <td>Comando ON ejecutado en Relé A</td>
+                    <td><span class="badge badge-accent">SUCCESS</span></td>
+                  </tr>
+                  <tr>
+                    <td>13:00:12</td>
+                    <td><span class="device-cell"><i class="ti ti-server"></i> MQTT_BROKER</span></td>
+                    <td>broker/cmd</td>
+                    <td>Intento de reconexión de nodo alternativo</td>
+                    <td><span class="badge badge-warning">WARNING</span></td>
+                  </tr>
+                  <tr>
+                    <td>12:58:34</td>
+                    <td><span class="device-cell"><i class="ti ti-alert-triangle"></i> SENSOR_NET_12</span></td>
+                    <td>sensors/cmd</td>
+                    <td>Batería de nodo por debajo del 15%</td>
+                    <td><span class="badge badge-pink">DANGER</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- SECCIÓN 2 — GRÁFICOS (ANALYTICS) -->
+        <!-- ======================================================== -->
+        <section id="sec-graficos" class="section-pane fade-in">
+          
+          <div class="charts-intro-card">
+            <h3 class="font-syne"><i class="ti ti-wave-sine"></i> Telemetría Avanzada y Análisis de Datos</h3>
+            <p class="font-mono">Paneles de rendimiento y uso de protocolos de comunicación IoT. Los datos son renderizados a través de capas optimizadas de Chart.js con soporte responsivo acelerado.</p>
+          </div>
+
+          <div class="charts-grid">
+            <!-- Chart 1: Line Chart -->
+            <div class="chart-card">
+              <div class="chart-header">
+                <span class="chart-title font-syne"><i class="ti ti-chart-line"></i> Mensajes MQTT por hora</span>
+                <span class="badge font-mono badge-primary">Últimas 12 horas</span>
+              </div>
+              <div class="chart-wrapper">
+                <canvas id="chart-line-mqtt"></canvas>
+              </div>
+            </div>
+
+            <!-- Chart 2: Doughnut Chart -->
+            <div class="chart-card">
+              <div class="chart-header">
+                <span class="chart-title font-syne"><i class="ti ti-chart-donut"></i> Distribución de Protocolos</span>
+                <span class="badge font-mono badge-cyan">Por volumen de datos</span>
+              </div>
+              <div class="chart-wrapper doughnut-layout">
+                <div class="canvas-container">
+                  <canvas id="chart-doughnut-protocols"></canvas>
+                </div>
+                <!-- Custom HTML Legend -->
+                <div class="custom-legend font-mono" id="doughnut-legend">
+                  <!-- Se autogenera en JS -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Chart 3: Bar Chart -->
+            <div class="chart-card">
+              <div class="chart-header">
+                <span class="chart-title font-syne"><i class="ti ti-chart-bar"></i> Errores Registrados por Subcomponente</span>
+                <span class="badge font-mono badge-pink">Mes actual</span>
+              </div>
+              <div class="chart-wrapper">
+                <canvas id="chart-bar-errors"></canvas>
+              </div>
+            </div>
+
+            <!-- Chart 4: Double Area Chart -->
+            <div class="chart-card">
+              <div class="chart-header">
+                <span class="chart-title font-syne"><i class="ti ti-chart-area"></i> Recursos: CPU vs RAM (Histórico)</span>
+                <span class="badge font-mono badge-warning">Últimos 7 días</span>
+              </div>
+              <div class="chart-wrapper">
+                <canvas id="chart-area-resources"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- DETALLE DISPOSITIVOS TABLE -->
+          <div class="table-container-section margin-top-2">
+            <div class="table-header-row">
+              <h4 class="block-title font-syne"><i class="ti ti-devices"></i> Inventario Detallado de Nodos IoT Activos</h4>
+              <span class="badge font-mono badge-accent">6 Dispositivos en Monitoreo Directo</span>
+            </div>
+
+            <div class="responsive-table-wrapper">
+              <table class="dashboard-table font-mono">
+                <thead>
+                  <tr>
+                    <th>ID Dispositivo</th>
+                    <th>Tipo</th>
+                    <th>Protocolo</th>
+                    <th>Topic MQTT Comando</th>
+                    <th>MSG/H</th>
+                    <th>Latencia</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>NODE-ESP32-01</td>
+                    <td>Microcontrolador</td>
+                    <td>MQTT (HiveMQ)</td>
+                    <td>broker/cmd</td>
+                    <td>5,400 msg/h</td>
+                    <td>12 ms</td>
+                    <td><span class="badge badge-accent">ACTIVE</span></td>
+                  </tr>
+                  <tr>
+                    <td>NODE-RPI4-GW</td>
+                    <td>Gateway Central</td>
+                    <td>HTTP / MQTT</td>
+                    <td>gateway/cmd</td>
+                    <td>8,230 msg/h</td>
+                    <td>8 ms</td>
+                    <td><span class="badge badge-accent">ACTIVE</span></td>
+                  </tr>
+                  <tr>
+                    <td>NODE-STM32-05</td>
+                    <td>Medidor Flujo Agua</td>
+                    <td>MQTT (EMQX)</td>
+                    <td>gravity/sensors/cmd</td>
+                    <td>1,200 msg/h</td>
+                    <td>24 ms</td>
+                    <td><span class="badge badge-accent">ACTIVE</span></td>
+                  </tr>
+                  <tr>
+                    <td>NODE-ESP8266-12</td>
+                    <td>Relé Actuador Presión</td>
+                    <td>MQTT (Local)</td>
+                    <td>gravity/actuators/cmd</td>
+                    <td>850 msg/h</td>
+                    <td>18 ms</td>
+                    <td><span class="badge badge-accent">ACTIVE</span></td>
+                  </tr>
+                  <tr>
+                    <td>NODE-WS-ENV03</td>
+                    <td>Clima e Iluminación</td>
+                    <td>WebSockets</td>
+                    <td>N/A (WS Route)</td>
+                    <td>2,300 msg/h</td>
+                    <td>15 ms</td>
+                    <td><span class="badge badge-accent">ACTIVE</span></td>
+                  </tr>
+                  <tr>
+                    <td>NODE-COAP-TEMP</td>
+                    <td>Sensor Temperatura Criogénica</td>
+                    <td>CoAP Protocol</td>
+                    <td>N/A (CoAP Uri)</td>
+                    <td>450 msg/h</td>
+                    <td>42 ms</td>
+                    <td><span class="badge badge-warning">RECONNECTING</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- SECCIÓN 3 — SISTEMA (SYSTEM telemetry) -->
+        <!-- ======================================================== -->
+        <section id="sec-sistema" class="section-pane fade-in">
+          
+          <div class="system-grid">
+            
+            <!-- Card 1: Server Stats -->
+            <div class="system-card">
+              <div class="system-card-header font-syne">
+                <i class="ti ti-server"></i> Datos del Servidor Principal
+              </div>
+              <div class="system-card-content font-mono">
+                <div class="stat-row">
+                  <span class="stat-label">Hostname:</span>
+                  <span class="stat-val text-white">obs-server-01</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">OS:</span>
+                  <span class="stat-val text-white">Ubuntu Server 22.04.4 LTS (x86_64)</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Kernel:</span>
+                  <span class="stat-val text-white">5.15.0-101-generic</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Versión Plataforma:</span>
+                  <span class="stat-val text-accent">Engine v2.4.1-stable</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Uptime:</span>
+                  <span class="stat-val text-cyan" id="sys-uptime">14 días, 8 horas, 42 minutos</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">IP Pública:</span>
+                  <span class="stat-val text-white">186.28.140.92</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Zona Horaria:</span>
+                  <span class="stat-val text-white">Bogotá, Colombia (UTC -05:00)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: Resources Performance (Animated Progress Bars) -->
+            <div class="system-card">
+              <div class="system-card-header font-syne">
+                <i class="ti ti-cpu"></i> Recursos Físicos del Sistema
+              </div>
+              <div class="system-card-content font-mono">
+                <!-- CPU Bar -->
+                <div class="progress-block">
+                  <div class="progress-meta">
+                    <span>Uso del Procesador (CPU)</span>
+                    <span class="text-white" id="bar-cpu-text">42%</span>
+                  </div>
+                  <div class="progress-bar-track">
+                    <div class="progress-bar-fill cpu-gradient" id="bar-cpu" style="width: 42%;"></div>
+                  </div>
+                </div>
+
+                <!-- RAM Bar -->
+                <div class="progress-block">
+                  <div class="progress-meta">
+                    <span>Memoria Física (RAM)</span>
+                    <span class="text-white" id="bar-ram-text">68%</span>
+                  </div>
+                  <div class="progress-bar-track">
+                    <div class="progress-bar-fill ram-gradient" id="bar-ram" style="width: 68%;"></div>
+                  </div>
+                </div>
+
+                <!-- Disk Bar -->
+                <div class="progress-block">
+                  <div class="progress-meta">
+                    <span>Almacenamiento (SSD NVMe)</span>
+                    <span class="text-white">34%</span>
+                  </div>
+                  <div class="progress-bar-track">
+                    <div class="progress-bar-fill disk-gradient" style="width: 34%;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: Software Services Stack -->
+            <div class="system-card">
+              <div class="system-card-header font-syne">
+                <i class="ti ti-apps"></i> Orquestación y Microservicios
+              </div>
+              <div class="system-card-content font-mono">
+                <div class="service-status-row">
+                  <div class="service-meta">
+                    <i class="ti ti-brand-nodejs text-cyan service-icon"></i>
+                    <span>Node.js API Engine v20.11</span>
+                  </div>
+                  <span class="badge badge-accent"><span class="pulse-dot green animate-pulse"></span> ONLINE</span>
+                </div>
+
+                <div class="service-status-row">
+                  <div class="service-meta">
+                    <i class="ti ti-cube text-primary service-icon"></i>
+                    <span>Eclipse Mosquitto Broker v2.0.18</span>
+                  </div>
+                  <span class="badge badge-accent"><span class="pulse-dot green animate-pulse"></span> ONLINE</span>
+                </div>
+
+                <div class="service-status-row">
+                  <div class="service-meta">
+                    <i class="ti ti-database-cog text-cyan service-icon"></i>
+                    <span>PostgreSQL Database v16.2</span>
+                  </div>
+                  <span class="badge badge-accent"><span class="pulse-dot green animate-pulse"></span> ONLINE</span>
+                </div>
+
+                <div class="service-status-row">
+                  <div class="service-meta">
+                    <i class="ti ti-database text-pink service-icon"></i>
+                    <span>Redis In-Memory Cache v7.2</span>
+                  </div>
+                  <span class="badge badge-accent"><span class="pulse-dot green animate-pulse"></span> ONLINE</span>
+                </div>
+
+                <div class="service-status-row">
+                  <div class="service-meta">
+                    <i class="ti ti-brand-docker text-cyan service-icon"></i>
+                    <span>Docker Daemon v25.0.3</span>
+                  </div>
+                  <span class="badge badge-accent"><span class="pulse-dot green animate-pulse"></span> ONLINE</span>
+                </div>
+
+                <div class="service-status-row">
+                  <div class="service-meta">
+                    <i class="ti ti-world text-warning service-icon"></i>
+                    <span>Nginx Edge Reverse Proxy v1.25</span>
+                  </div>
+                  <span class="badge badge-accent"><span class="pulse-dot green animate-pulse"></span> ONLINE</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 4: Network and Interfaces -->
+            <div class="system-card">
+              <div class="system-card-header font-syne">
+                <i class="ti ti-network"></i> Telemetría de Red Local e Industrial
+              </div>
+              <div class="system-card-content font-mono">
+                <div class="stat-row">
+                  <span class="stat-label">Interfaz Principal:</span>
+                  <span class="stat-val text-white">eth0 (Full-Duplex Gigabit)</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Tráfico RX (Subida):</span>
+                  <span class="stat-val text-accent" id="net-rx">12.4 MB/s</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Tráfico TX (Bajada):</span>
+                  <span class="stat-val text-cyan" id="net-tx">6.8 MB/s</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Pérdida de Paquetes:</span>
+                  <span class="stat-val text-green">0.00 % (Excelente)</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">DNS Resolvers:</span>
+                  <span class="stat-val text-white">1.1.1.1, 8.8.8.8</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Firewall (UFW Status):</span>
+                  <span class="stat-val text-accent">Active (Port 1883, 80, 443 active)</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Wireguard VPN:</span>
+                  <span class="stat-val text-green"><i class="ti ti-lock"></i> Túnel Seguro Bogotá Cifrado</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- SECCIÓN 4 — CONEXIONES (IoT CONNECTIONS CENTER) -->
+        <!-- ======================================================== -->
+        <section id="sec-conexiones" class="section-pane fade-in">
+          
+          <div class="connections-wrapper">
+            
+            <div class="connection-selection-card">
+              <h3 class="font-syne"><i class="ti ti-router"></i> Orquestador de Conexiones IoT</h3>
+              <p class="font-mono">Seleccione el protocolo de enlace para monitorizar. MQTT es completamente funcional en este panel interactivo.</p>
+              
+              <div class="custom-select-wrapper">
+                <label for="connection-protocol-selector" class="font-mono label-futuristic">PROTOCOLO DE ENLACE DE DATOS</label>
+                <select id="connection-protocol-selector" class="futuristic-select font-mono" onchange="switchProtocolView()">
+                  <option value="MQTT">MQTT (Mensajería Asíncrona Liviana) [ACTIVO]</option>
+                  <option value="HTTP">HTTP (API RESTful JSON) [MOCKUP]</option>
+                  <option value="WS">WebSockets (Canal Bidireccional Full-Duplex) [MOCKUP]</option>
+                  <option value="COAP">CoAP (Protocolo de Entorno Constreñido UDP) [MOCKUP]</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- PANEL MQTT FUNCIONAL -->
+            <div id="panel-protocol-mqtt" class="protocol-panel active">
+              
+              <div class="panel-layout-grid">
+                
+                <!-- MQTT Config Panel Form (Left) -->
+                <div class="mqtt-config-card">
+                  <h4 class="font-syne card-sub-title"><i class="ti ti-settings-cog"></i> Configurar Enlace Broker MQTT</h4>
+                  
+                  <div class="mqtt-inputs-grid font-mono">
+                    <div class="input-group">
+                      <label>Broker Host</label>
+                      <input type="text" id="mqtt-host" value="broker.hivemq.com" placeholder="Ej. broker.emqx.io">
+                    </div>
+
+                    <div class="input-group">
+                      <label>Puerto (Websocket / TCP)</label>
+                      <input type="number" id="mqtt-port" value="8884">
+                    </div>
+
+                    <div class="input-group full-width">
+                      <label>Client ID (Identificador)</label>
+                      <input type="text" id="mqtt-client-id" value="NanoESP32_RGB">
+                    </div>
+
+                    <div class="input-group">
+                      <label>Username</label>
+                      <input type="text" id="mqtt-user" placeholder="Opcional">
+                    </div>
+
+                    <div class="input-group">
+                      <label>Password</label>
+                      <input type="password" id="mqtt-pass" placeholder="Opcional">
+                    </div>
+
+                    <div class="input-group">
+                      <label>Topic Principal</label>
+                      <input type="text" id="mqtt-topic" value="nanoesp32">
+                    </div>
+
+                    <div class="input-group">
+                      <label>Nivel de QoS</label>
+                      <select id="mqtt-qos" class="futuristic-select-inline">
+                        <option value="0">QoS 0 - Al menos una vez</option>
+                        <option value="1" selected>QoS 1 - Exactamente una vez</option>
+                        <option value="2">QoS 2 - Envío Garantizado</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="mqtt-action-buttons">
+                    <button class="btn btn-connect" id="mqtt-btn-connect" onclick="actionMqttConnect()"><i class="ti ti-plug"></i> Conectar</button>
+                    <button class="btn btn-disconnect disabled" id="mqtt-btn-disconnect" onclick="actionMqttDisconnect()" disabled><i class="ti ti-plug-off"></i> Desconectar</button>
+                    <button class="btn btn-publish" id="mqtt-btn-publish" onclick="actionMqttPublish()"><i class="ti ti-send"></i> Publicar Payload</button>
+                  </div>
+
+                  <div class="broker-status-card font-mono">
+                    <span class="status-label">Estado del Enlace:</span>
+                    <span id="mqtt-status-badge" class="badge-status disconnected"><span class="pulse-dot red animate-pulse" id="mqtt-status-pulse"></span> DESCONECTADO</span>
+                  </div>
+                </div>
+
+                <!-- Cyberpunk Terminal Console (Right) -->
+                <div class="mqtt-console-card">
+                  <div class="console-header font-syne">
+                    <span><i class="ti ti-terminal-2"></i> CONSOLA DE REGISTROS</span>
+                    <button class="btn-clear-console" onclick="clearConsole()"><i class="ti ti-trash"></i> Limpiar</button>
+                  </div>
+                  <div class="console-body font-mono" id="mqtt-terminal-logs">
+                    <div class="log-line text-muted">[SYSTEM INFO] Consola de comunicaciones iniciada.</div>
+                    <div class="log-line text-muted">[SYSTEM INFO] Esperando directiva de conexión por parte del operario...</div>
+                  </div>
+                  <div class="console-footer font-mono">
+                    <span>Active Topic Listeners: gravity/#</span>
+                    <span>Buffer: OK</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- MQTT COMPATIBILITY INFORMATION AND STRUCTURED TABLES -->
+              <div class="table-container-section margin-top-2">
+                <div class="table-header-row">
+                  <h4 class="block-title font-syne"><i class="ti ti-broadcast"></i> Canales y Tópicos MQTT Subscritos</h4>
+                  <span class="badge font-mono badge-primary">Filtro de Escucha Activa</span>
+                </div>
+                
+                <div class="responsive-table-wrapper">
+                  <table class="dashboard-table font-mono">
+                    <thead>
+                      <tr>
+                        <th>Tópico</th>
+                        <th>QoS Requerida</th>
+                        <th>Subscriptores Dashboard</th>
+                        <th>MSG/min Promedio</th>
+                        <th>Último Payload Recibido</th>
+                        <th>Estado de Escucha</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>broker/cmd</td>
+                        <td>QoS 1</td>
+                        <td>3 clientes</td>
+                        <td>4.2 msg/m</td>
+                        <td class="text-cyan font-mono">{"cmd": "on"}</td>
+                        <td><span class="badge badge-accent">ESCUCHANDO</span></td>
+                      </tr>
+                      <tr>
+                        <td>gateway/cmd</td>
+                        <td>QoS 1</td>
+                        <td>1 cliente</td>
+                        <td>12.8 msg/m</td>
+                        <td class="text-cyan font-mono">{"cmd": "on"}</td>
+                        <td><span class="badge badge-accent">ESCUCHANDO</span></td>
+                      </tr>
+                      <tr>
+                        <td>sensors/cmd</td>
+                        <td>QoS 0</td>
+                        <td>8 clientes</td>
+                        <td>180.5 msg/m</td>
+                        <td class="text-cyan font-mono">{"temp": 24.5, "hum": 62}</td>
+                        <td><span class="badge badge-accent">ESCUCHANDO</span></td>
+                      </tr>
+                      <tr>
+                        <td>actuators/cmd</td>
+                        <td>QoS 2</td>
+                        <td>5 clientes</td>
+                        <td>1.5 msg/m</td>
+                        <td class="text-cyan font-mono">{"cmd": "on"}</td>
+                        <td><span class="badge badge-accent">ESCUCHANDO</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- OTROS PROTOCOLOS MOCKUP -->
+            <div id="panel-protocol-http" class="protocol-panel font-mono">
+              <div class="mockup-panel-card">
+                <i class="ti ti-cloud-storm mockup-icon"></i>
+                <h4 class="font-syne">Enlace HTTP REST API</h4>
+                <p>Monitoreo de peticiones y respuestas mediante llamadas síncronas HTTP JSON.</p>
+                
+                <div class="responsive-table-wrapper margin-top-1">
+                  <table class="dashboard-table">
+                    <thead>
+                      <tr>
+                        <th>Endpoint HTTP</th>
+                        <th>Método</th>
+                        <th>Peticiones / H</th>
+                        <th>Latencia Promedio</th>
+                        <th>Código Estado</th>
+                        <th>Estado</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>/api/v1/telemetry/nodes</td>
+                        <td><span class="badge badge-cyan">GET</span></td>
+                        <td>1,240 REQ/H</td>
+                        <td>14 ms</td>
+                        <td class="text-green">200 OK</td>
+                        <td><span class="badge badge-accent">ACTIVO</span></td>
+                      </tr>
+                      <tr>
+                        <td>/api/v1/actuators/trigger</td>
+                        <td><span class="badge badge-primary">POST</span></td>
+                        <td>124 REQ/H</td>
+                        <td>28 ms</td>
+                        <td class="text-green">202 Accepted</td>
+                        <td><span class="badge badge-accent">ACTIVO</span></td>
+                      </tr>
+                      <tr>
+                        <td>/api/v1/system/status</td>
+                        <td><span class="badge badge-cyan">GET</span></td>
+                        <td>3,600 REQ/H</td>
+                        <td>8 ms</td>
+                        <td class="text-green">200 OK</td>
+                        <td><span class="badge badge-accent">ACTIVO</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div id="panel-protocol-ws" class="protocol-panel font-mono">
+              <div class="mockup-panel-card">
+                <i class="ti ti-plug-connected mockup-icon"></i>
+                <h4 class="font-syne">Conexión WebSockets</h4>
+                <p>Canal persistente de comunicación duplex para flujos masivos de sensores en tiempo real.</p>
+                <div class="ws-mockup-info">
+                  <div class="stat-row"><span class="stat-label">URI de Conexión:</span> <span class="stat-val text-white">ws://gravity.io/ws/telemetry</span></div>
+                  <div class="stat-row"><span class="stat-label">Estado de Handshake:</span> <span class="stat-val text-yellow">Simulado en espera</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div id="panel-protocol-coap" class="protocol-panel font-mono">
+              <div class="mockup-panel-card">
+                <i class="ti ti-antenna mockup-icon"></i>
+                <h4 class="font-syne">Protocolo CoAP (Constrained Application Protocol)</h4>
+                <p>Especialmente diseñado para nodos microcontroladores de consumo ultra-bajo en capas UDP.</p>
+                <div class="coap-mockup-info">
+                  <div class="stat-row"><span class="stat-label">Método de Transporte:</span> <span class="stat-val text-white">UDP / DTLS (Seguridad en Capa de Transporte)</span></div>
+                  <div class="stat-row"><span class="stat-label">Esquema URI:</span> <span class="stat-val text-cyan">coap://[fe80::1]:5683/sensors/temp</span></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- SECCIÓN 5 — QUIÉNES SOMOS -->
+        <!-- ======================================================== -->
+        <section id="sec-quienes-somos" class="section-pane fade-in">
+          
+          <!-- Hero Card with Background Watermark -->
+          <div class="about-hero-card">
+            <!-- Background Giant Watermark Text -->
+            <div class="about-watermark font-syne">GRAVITY</div>
+            
+            <div class="about-hero-content">
+              <span class="badge badge-accent font-mono">PROYECTO </span>
+              <h2 class="font-syne">equipo de trabajo</h2>
+              
+            <div class="about-team-photo">
+  <img src="imagen.jpeg" alt="Equipo de trabajo" />
+</div>
+            </div>
+          </div>
+
+          <!-- TEAM LAYOUT -->
+          <div class="section-title-row margin-top-2">
+            <h3 class="subsection-title font-syne"><i class="ti ti-users"></i> Equipo de Desarrollo y Operaciones</h3>
+          </div>
+
+          <div class="team-grid">
+            <!-- Member 1 -->
+            <div class="team-card">
+              <div class="team-accent-top bg-accent"></div>
+              <div class="avatar-circle border-accent font-syne bg-accent-glow">
+                JE
+              </div>
+              <h4 class="member-name font-syne">Jhonatan Estiven Ramírez Ballesteros</h4>
+              <p class="member-role font-mono">Equipo De trabajo</p>
+              <a href="mailto:estivenballesteros1081@gmail.com" class="member-mail font-mono"><i class="ti ti-mail"></i> estivenballesteros1081@gmail.com</a>
+            </div>
+
+            <!-- Member 2 -->
+            <div class="team-card">
+              <div class="team-accent-top bg-cyan"></div>
+              <div class="avatar-circle border-cyan font-syne bg-cyan-glow">
+                SG
+              </div>
+              <h4 class="member-name font-syne">Santiago González Rivera</h4>
+              <p class="member-role font-mono">Equipo de trabajo</p>
+              <a href="mailto:santiagoriveragonzales12@gmail.com" class="member-mail font-mono"><i class="ti ti-mail"></i> santiagoriveragonzales12@gmail.com</a>
+            </div>
+
+            <!-- Member 3 -->
+            <div class="team-card">
+              <div class="team-accent-top bg-purple"></div>
+              <div class="avatar-circle border-purple font-syne bg-purple-glow">
+                MD
+              </div>
+              <h4 class="member-name font-syne">Michael David Cachaya Ordóñez</h4>
+              <p class="member-role font-mono">Equipo de trabajo</p>
+              <a href="mailto:maicoldavid089@gmail.com" class="member-mail font-mono"><i class="ti ti-mail"></i> maicoldavid089@gmail.com</a>
+            </div>
+
+            <!-- Member 4 -->
+            <div class="team-card">
+              <div class="team-accent-top bg-warning"></div>
+              <div class="avatar-circle border-warning font-syne bg-warning-glow">
+                JY
+              </div>
+              <h4 class="member-name font-syne">Jose Yobany Cajas Silva</h4>
+              <p class="member-role font-mono">Equipo de trabajo</p>
+              <a href="mailto:gamer.cajas@gmail.com" class="member-mail font-mono"><i class="ti ti-mail"></i> gamer.cajas@gmail.com</a>
+            </div>
+
+            <!-- Member 5 -->
+            <div class="team-card">
+              <div class="team-accent-top bg-pink"></div>
+              <div class="avatar-circle border-pink font-syne bg-pink-glow">
+                PA
+              </div>
+              <h4 class="member-name font-syne">Paula Andrea Parra León</h4>
+              <p class="member-role font-mono">Equipo de trabajo</p>
+              <a href="mailto:leonpaula323@gmail.com" class="member-mail font-mono"><i class="ti ti-mail"></i> leonpaula323@gmail.com</a>
+            </div>
+
+            <!-- Member 6 -->
+            <div class="team-card">
+              <div class="team-accent-top bg-accent"></div>
+              <div class="avatar-circle border-accent font-syne bg-accent-glow" style="background: rgba(0,191,255,0.15); border-color: #00bfff;">
+                MH
+              </div>
+              <h4 class="member-name font-syne">Marlon Hernando Chavarro Leiton</h4>
+              <p class="member-role font-mono">Equipo de trabajo</p>
+              <a href="mailto:mchavarro51@gmail.com" class="member-mail font-mono"><i class="ti ti-mail"></i> mchavarro51@gmail.com</a>
+            </div>
+          </div>
+
+          <!-- FOOTER CONTACT STRIP -->
+          <div class="contact-strip-footer font-mono">
+            <div class="contact-item">
+              <i class="ti ti-mail-forward"></i>
+              <span>gamer.cajas@gmail.com</span>
+            </div>
+            <div class="contact-item">
+              <i class="ti ti-world"></i>
+              <a href="https://www.gravity.io" target="_blank">www.sena.com</a>
+            </div>
+            <div class="contact-item">
+              <i class="ti ti-map-pin"></i>
+              <span>Pitalito, Huila, Colombia</span>
+            </div>
+            <div class="contact-item">
+              <i class="ti ti-brand-github"></i>
+              <a href="https://github.com/gravity-iot" target="_blank">github.com</a>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- SECCIÓN 6 — SOPORTE TÉCNICO -->
+        <!-- ======================================================== -->
+        <section id="sec-soporte" class="section-pane fade-in">
+          
+          <div class="support-grid">
+            
+            <!-- Contacto card -->
+            <div class="support-card">
+              <div class="support-card-header font-syne">
+                <i class="ti ti-headset"></i> Canal Directo de Soporte Técnico
+              </div>
+              <div class="support-card-content font-mono">
+                <p>Si experimenta anomalías de sincronización de sensores en el Proyecto Botón, contáctenos:</p>
+                
+                <div class="support-links-box">
+                  <a href="mailto:soporte@gravity.io" class="support-link">
+                    <i class="ti ti-mail icon-accent"></i>
+                    <div>
+                      <span class="label text-white">Email Corporativo</span>
+                      <span class="val">mchavarro51@gmail.com</span>
+                    </div>
+                  </a>
+
+                  <a href="https://wa.me/573000000000" class="support-link" target="_blank">
+                    <i class="ti ti-brand-whatsapp text-green"></i>
+                    <div>
+                      <span class="label text-white">WhatsApp</span>
+                      <span class="val">+57 3102906525</span>
+                    </div>
+                  </a>
+
+                  <a href="#" class="support-link">
+                    <i class="ti ti-ticket text-cyan"></i>
+                    <div>
+                      <span class="label text-white">Portal de Tickets SLA</span>
+                      <span class="val">tickets.gravity.io</span>
+                    </div>
+                  </a>
+
+                  <a href="#" class="support-link">
+                    <i class="ti ti-books text-warning"></i>
+                    <div>
+                      <span class="label text-white">Documentación Técnica</span>
+                      <span class="val">docs.gravity.io</span>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- SLA card -->
+            <div class="support-card">
+              <div class="support-card-header font-syne">
+                <i class="ti ti-shield-half-filled"></i> Compromisos de SLA (Acuerdo de Servicio)
+              </div>
+              <div class="support-card-content font-mono">
+                <div class="sla-row">
+                  <span class="sla-title">Horario de Operaciones Estándar:</span>
+                  <span class="sla-desc text-white">Lunes a Viernes — 8:00 AM a 6:00 PM (Hora de Bogotá)</span>
+                </div>
+                <div class="sla-row">
+                  <span class="sla-title">Incidentes Críticos:</span>
+                  <span class="sla-desc text-accent">Monitoreo y respuesta automática 24 horas al día, 7 días a la semana. Tiempo estimado de mitigación menor a 2 horas.</span>
+                </div>
+                <div class="sla-row">
+                  <span class="sla-title">Uptime Garantizado:</span>
+                  <span class="sla-desc text-cyan">Plataforma Cloud & Broker: 99.5% de disponibilidad anual.</span>
+                </div>
+                <div class="sla-row">
+                  <span class="sla-title">Flujo de Escalamiento:</span>
+                  <span class="sla-desc text-white">Nivel 1: Chatbot/WhatsApp • Nivel 2: Agente de Campo • Nivel 3: Correo Técnico de Alta Prioridad.</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- TABLA TICKETS ACTIVOS -->
+          <div class="table-container-section margin-top-2">
+            <div class="table-header-row">
+              <h4 class="block-title font-syne"><i class="ti ti-ticket"></i> Cola de Soporte Técnico — Tickets de Incidencia</h4>
+              <span class="badge font-mono badge-warning">Cola de SLA Bogotá</span>
+            </div>
+
+            <div class="responsive-table-wrapper">
+              <table class="dashboard-table font-mono">
+                <thead>
+                  <tr>
+                    <th>Código #</th>
+                    <th>Asunto del Incidente</th>
+                    <th>Prioridad</th>
+                    <th>Agente Asignado</th>
+                    <th>Estado SLA</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>#TKT-9204</td>
+                    <td>Pérdida intermitente de paquetes UDP en nodo CoAP criogénico</td>
+                    <td><span class="badge badge-pink">CRÍTICA</span></td>
+                    <td>Juan Sebastián (IoT Lead)</td>
+                    <td><span class="badge badge-warning">EN PROCESO</span></td>
+                  </tr>
+                  <tr>
+                    <td>#TKT-9201</td>
+                    <td>Configuración de logs excesiva en base de datos Postgres</td>
+                    <td><span class="badge badge-warning">MEDIA</span></td>
+                    <td>Daniela Restrepo (Devops)</td>
+                    <td><span class="badge badge-accent">RESUELTO</span></td>
+                  </tr>
+                  <tr>
+                    <td>#TKT-9195</td>
+                    <td>Actualización estética de dashboard a escala mobile</td>
+                    <td><span class="badge badge-cyan">BAJA</span></td>
+                    <td>Mariana Cárdenas (Design)</td>
+                    <td><span class="badge badge-accent">RESUELTO</span></td>
+                  </tr>
+                  <tr>
+                    <td>#TKT-9182</td>
+                    <td>Redireccionamiento HTTP en reverse proxy Nginx</td>
+                    <td><span class="badge badge-warning">MEDIA</span></td>
+                    <td>Daniela Restrepo (Devops)</td>
+                    <td><span class="badge badge-accent">RESUELTO</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- Toaster Alert Container (Bottom Right) -->
+  <div class="toast-holder" id="toast-holder"></div>
+
+  <!-- Core Javascript File -->
+  <script src="app.js"></script>
+</body>
+</html>
